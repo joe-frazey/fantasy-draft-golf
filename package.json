@@ -1,11 +1,11 @@
 {
-  "name": "tour-championship-draft-order",
+  "name": "fantasy-draft-golf",
   "version": "1.0.0",
   "description": "Fantasy Football Draft Order determined by 2025 Tour Championship results",
   "main": "index.html",
   "scripts": {
+    "build": "echo 'Static site ready for deployment'",
     "dev": "npx http-server . -p 3000",
-    "build": "echo 'Static site - no build step needed'",
     "start": "npx http-server . -p 3000"
   },
   "keywords": [
@@ -15,9 +15,6 @@
     "draft-order",
     "tournament"
   ],
-  "author": "Your Name",
-  "license": "MIT",
-  "devDependencies": {
-    "http-server": "^14.1.1"
-  }
+  "author": "Joe Frazey",
+  "license": "MIT"
 }
