@@ -1,0 +1,371 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #2c3e50;
+    color: #ffffff;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header styles */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #4CAF50, #81C784);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: #B0BEC5;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.tournament-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(76, 175, 80, 0.2);
+    padding: 8px 16px;
+    border-radius: 25px;
+    border: 1px solid #4CAF50;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: #4CAF50;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4CAF50;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Leaderboard styles */
+.leaderboard-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-header {
+    display: grid;
+    grid-template-columns: 80px 120px 1fr 1fr 120px;
+    background: #34495e;
+    padding: 15px 20px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #7f8c8d;
+}
+
+.header-cell {
+    text-align: center;
+    color: white;
+}
+
+.leaderboard-body {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.team-row {
+    display: grid;
+    grid-template-columns: 80px 120px 1fr 1fr 120px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #34495e;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background: #2c3e50;
+}
+
+.team-row:last-child {
+    border-bottom: none;
+}
+
+.team-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(5px);
+}
+
+.team-row.rank-change {
+    animation: rankChange 0.8s ease;
+    background: rgba(255, 193, 7, 0.2);
+}
+
+@keyframes rankChange {
+    0% { background: rgba(255, 193, 7, 0.4); }
+    100% { background: rgba(255, 193, 7, 0.1); }
+}
+
+.rank {
+    text-align: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-name {
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.golfer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding-left: 10px;
+}
+
+.golfer-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.golfer-score {
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.score-under {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.15);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.score-over {
+    color: #F44336;
+    background: rgba(244, 67, 54, 0.15);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.score-even {
+    color: #FFC107;
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.total-score {
+    text-align: center;
+    font-weight: 700;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thru-info {
+    text-align: center;
+    color: #B0BEC5;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Final results styles */
+.final-results {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.final-banner {
+    background: linear-gradient(135deg, #FF6B35, #F7931E);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+    animation: finalReveal 1s ease-out;
+}
+
+.final-banner h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.final-banner p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+@keyframes finalReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Footer styles */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #B0BEC5;
+    font-size: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Odds styling */
+.odds {
+    color: #3498db;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+/* Lock button styles */
+.lock-button-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.lock-button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease;
+}
+
+.lock-button:hover {
+    background: #c0392b;
+}
+
+.lock-button:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* Update odds button animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.update-odds-button:disabled {
+    cursor: not-allowed !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .leaderboard-header,
+    .team-row {
+        grid-template-columns: 60px 100px 1fr 1fr 80px;
+        padding: 12px 15px;
+        font-size: 12px;
+        gap: 5px;
+    }
+    
+    .header-cell {
+        font-size: 11px;
+    }
+    
+    .golfer-name {
+        font-size: 12px;
+    }
+    
+    .golfer-score {
+        font-size: 12px;
+    }
+    
+    .rank {
+        font-size: 20px;
+    }
+    
+    .team-name {
+        font-size: 14px;
+    }
+    
+    .total-score {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaderboard-header,
+    .team-row {
+        grid-template-columns: 50px 80px 1fr 1fr 70px;
+        padding: 10px 12px;
+    }
+    
+    .title {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+    }
+}

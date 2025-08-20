@@ -1,0 +1,23 @@
+{
+  "name": "tour-championship-draft-order",
+  "version": "1.0.0",
+  "description": "Fantasy Football Draft Order determined by 2025 Tour Championship results",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3000",
+    "build": "echo 'Static site - no build step needed'",
+    "start": "npx http-server . -p 3000"
+  },
+  "keywords": [
+    "fantasy-football",
+    "golf",
+    "pga-tour",
+    "draft-order",
+    "tournament"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

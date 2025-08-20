@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Championship Draft Order Showdown</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Fantasy Football Draft Order</h1>
+            <h2 class="subtitle">2025 Tour Championship</h2>
+            <div class="tournament-status" id="tournamentStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Live Tournament</span>
+            </div>
+        </header>
+
+        <div class="leaderboard-container">
+            <div class="leaderboard-header">
+                <div class="header-cell pick">PICK</div>
+                <div class="header-cell team">TEAM</div>
+                <div class="header-cell golfer-1">GOLFER 1</div>
+                <div class="header-cell golfer-2">GOLFER 2</div>
+                <div class="header-cell total">TOTAL</div>
+            </div>
+            <div class="leaderboard-body" id="leaderboard">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+
+        <div class="lock-button-container" id="lockButtonContainer">
+            <button class="lock-button" id="lockButton">LOCK IN FINAL DRAFT ORDER</button>
+        </div>
+
+        <div class="final-results" id="finalResults" style="display: none;">
+            <div class="final-banner">
+                <h2>🏆 FINAL RESULTS 🏆</h2>
+                <p>Draft Order is Now Official!</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Last Updated: <span id="lastUpdate">--</span></p>
+            <p>Data provided by live tournament feed</p>
+        </footer>
+    </div>
+
+    <script src="script-simple.js"></script>
+</body>
+</html>
