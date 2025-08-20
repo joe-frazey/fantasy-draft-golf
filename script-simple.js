@@ -349,20 +349,20 @@ class TourChampionshipApp {
         
         // Show brief loading state for visual feedback
         updateButton.disabled = true;
-        updateButton.textContent = '📋 OPENING OPTIONS...';
+        updateButton.textContent = '📋 OPENING PASTER...';
         updateButton.style.background = '#95a5a6';
         
-        console.log('Opening odds update options...');
+        console.log('Opening manual odds paster...');
         
-        // Short delay for visual feedback, then show options
+        // Short delay for visual feedback, then show simplified paster
         setTimeout(() => {
-            this.showManualUpdateGuide();
+            this.showSimplifiedOddsPaster();
             
             // Reset button
             updateButton.disabled = false;
             updateButton.textContent = '🔄 UPDATE ODDS FROM WEB';
             updateButton.style.background = '#3498db';
-        }, 300);
+        }, 200);
     }
 
     async attemptOddsUpdate() {
@@ -695,7 +695,7 @@ class TourChampionshipApp {
         }
     }
 
-    showUpdateSuccess() {
+    showUpdateSuccess(message = '✅ Odds updated successfully!') {
         // Create a temporary success message
         const successMsg = document.createElement('div');
         successMsg.style.cssText = `
@@ -709,13 +709,16 @@ class TourChampionshipApp {
             font-weight: 600;
             z-index: 1000;
             animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         `;
-        successMsg.textContent = '✅ Odds updated successfully!';
+        successMsg.textContent = message;
         
         document.body.appendChild(successMsg);
         
         setTimeout(() => {
-            document.body.removeChild(successMsg);
+            if (document.body.contains(successMsg)) {
+                document.body.removeChild(successMsg);
+            }
         }, 3000);
     }
 
@@ -781,6 +784,203 @@ class TourChampionshipApp {
         console.log('Results:', oddsData);
         
         return oddsData;
+    }
+
+    showSimplifiedOddsPaster() {
+        // Create a simplified dialog that matches the user's image
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        `;
+        
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        `;
+        
+        content.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 style="color: #4ade80; margin: 0; font-size: 20px; font-weight: 600;">Manual Odds Paster</h2>
+                <button id="closeSimplePaster" style="
+                    background: none;
+                    border: none;
+                    color: #94a3b8;
+                    font-size: 24px;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                ">×</button>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <p style="color: #e2e8f0; margin: 0 0 15px 0; font-size: 14px; line-height: 1.5;">
+                    <strong>Instructions:</strong>
+                </p>
+                <ol style="color: #cbd5e1; margin: 0 0 20px 0; padding-left: 20px; font-size: 14px; line-height: 1.8;">
+                    <li>Open a new tab and go to: <a href="https://www.pgatour.com/tournaments/2025/tour-championship/R2025060/odds" target="_blank" style="color: #60a5fa; text-decoration: none;">PGA Tour Championship Odds</a></li>
+                    <li><strong>Select all the content</strong> on the page (<kbd style="background: #374151; padding: 2px 6px; border-radius: 3px; font-size: 12px;">Ctrl + A</kbd> or <kbd style="background: #374151; padding: 2px 6px; border-radius: 3px; font-size: 12px;">Cmd + A</kbd>)</li>
+                    <li><strong>Copy it</strong> (<kbd style="background: #374151; padding: 2px 6px; border-radius: 3px; font-size: 12px;">Ctrl + C</kbd> or <kbd style="background: #374151; padding: 2px 6px; border-radius: 3px; font-size: 12px;">Cmd + C</kbd>)</li>
+                    <li><strong>Paste it in the text area below</strong></li>
+                    <li>Click "Parse & Update Odds"</li>
+                </ol>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <textarea id="simpleOddsText" placeholder="Paste odds here..." style="
+                    width: 100%;
+                    height: 200px;
+                    padding: 15px;
+                    border: 2px solid #4a5568;
+                    border-radius: 8px;
+                    background: #1e293b;
+                    color: #e2e8f0;
+                    font-family: 'Monaco', 'Menlo', monospace;
+                    font-size: 12px;
+                    resize: vertical;
+                    box-sizing: border-box;
+                    outline: none;
+                " placeholder="Paste odds here..."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                <button id="cancelSimplePaster" style="
+                    background: #64748b;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 500;
+                ">
+                    Cancel
+                </button>
+                
+                <button id="parseAndUpdateButton" style="
+                    background: #4ade80;
+                    color: #1e293b;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 600;
+                ">
+                    Parse & Update Odds
+                </button>
+            </div>
+        `;
+        
+        // Add event listeners
+        const textarea = content.querySelector('#simpleOddsText');
+        const parseButton = content.querySelector('#parseAndUpdateButton');
+        const cancelButton = content.querySelector('#cancelSimplePaster');
+        const closeButton = content.querySelector('#closeSimplePaster');
+        
+        const closeModal = () => {
+            document.body.removeChild(modal);
+        };
+        
+        cancelButton.addEventListener('click', closeModal);
+        closeButton.addEventListener('click', closeModal);
+        
+        parseButton.addEventListener('click', async () => {
+            const pastedContent = textarea.value.trim();
+            
+            if (!pastedContent) {
+                // Show error styling on textarea
+                textarea.style.border = '2px solid #ef4444';
+                setTimeout(() => {
+                    textarea.style.border = '2px solid #4a5568';
+                }, 2000);
+                return;
+            }
+            
+            // Show loading state
+            parseButton.disabled = true;
+            parseButton.textContent = '🔍 Parsing & Updating...';
+            parseButton.style.background = '#94a3b8';
+            
+            console.log('Parsing and updating odds automatically...');
+            
+            // Parse the content
+            const extractedOdds = this.parsePastedOddsContent(pastedContent);
+            const foundCount = Object.keys(extractedOdds).length;
+            
+            if (foundCount > 0) {
+                console.log(`Found ${foundCount} golfer odds, applying updates...`);
+                
+                if (this.applyOddsUpdate(extractedOdds)) {
+                    // Success - update the app and close modal
+                    this.renderLeaderboard();
+                    this.updateLastUpdatedTime();
+                    
+                    closeModal();
+                    this.showUpdateSuccess(`Updated ${foundCount} golfer odds!`);
+                } else {
+                    // No changes applied
+                    parseButton.disabled = false;
+                    parseButton.textContent = 'Parse & Update Odds';
+                    parseButton.style.background = '#4ade80';
+                    
+                    // Show temporary message
+                    const originalText = parseButton.textContent;
+                    parseButton.textContent = `No Changes (${foundCount} found)`;
+                    parseButton.style.background = '#f59e0b';
+                    setTimeout(() => {
+                        parseButton.textContent = originalText;
+                        parseButton.style.background = '#4ade80';
+                    }, 3000);
+                }
+            } else {
+                // No odds found
+                parseButton.disabled = false;
+                parseButton.textContent = 'Parse & Update Odds';
+                parseButton.style.background = '#4ade80';
+                
+                // Show error message
+                const originalText = parseButton.textContent;
+                parseButton.textContent = '❌ No Golfer Odds Found';
+                parseButton.style.background = '#ef4444';
+                setTimeout(() => {
+                    parseButton.textContent = originalText;
+                    parseButton.style.background = '#4ade80';
+                }, 3000);
+                
+                // Also highlight textarea
+                textarea.style.border = '2px solid #ef4444';
+                setTimeout(() => {
+                    textarea.style.border = '2px solid #4a5568';
+                }, 3000);
+            }
+        });
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Focus on textarea for immediate pasting
+        setTimeout(() => textarea.focus(), 100);
     }
 
     showCopyPasteDialog() {
