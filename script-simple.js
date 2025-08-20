@@ -727,14 +727,164 @@ class TourChampionshipApp {
         const oddsData = {};
         const golfers = Object.keys(this.golferOdds);
         
+        console.log('Searching for golfers:', golfers);
+        console.log('Content preview:', pastedContent.substring(0, 500) + '...');
+        
+        // Detect if this is mobile format based on structure
+        const isMobileFormat = this.detectMobileFormat(pastedContent);
+        console.log('Mobile format detected:', isMobileFormat);
+        
+        if (isMobileFormat) {
+            return this.parseMobileFormat(pastedContent, golfers);
+        } else {
+            return this.parseDesktopFormat(pastedContent, golfers);
+        }
+    }
+
+    detectMobileFormat(content) {
+        // Mobile format indicators:
+        // - Has "PLAYER" and "ODDS" headers
+        // - Has "POS" column
+        // - Names appear on separate lines from odds
+        // - Times like "12:49 PM" present
+        const mobileIndicators = [
+            /\bPLAYER\b/i,
+            /\bODDS\b/i,
+            /\bPOS\b/i,
+            /\d{1,2}:\d{2}\s*[AP]M/i  // Time format like "12:49 PM"
+        ];
+        
+        const matches = mobileIndicators.filter(pattern => pattern.test(content));
+        return matches.length >= 2; // Need at least 2 indicators
+    }
+
+    parseMobileFormat(pastedContent, golfers) {
+        console.log('=== PARSING MOBILE FORMAT ===');
+        const oddsData = {};
+        
+        // Split content into lines and clean them
+        const lines = pastedContent.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        
+        // In mobile format, we need to look for patterns where:
+        // - Player name appears on one line
+        // - Odds appears a few lines later with +number format
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            
+            // Check if this line contains a golfer name
+            golfers.forEach(golfer => {
+                if (oddsData[golfer]) return; // Already found
+                
+                // Check if line matches golfer (handle abbreviated names)
+                if (this.matchesGolferName(line, golfer)) {
+                    console.log(`\n--- Found golfer line: "${line}" matches ${golfer} ---`);
+                    
+                    // Look for odds in the next few lines
+                    for (let j = i + 1; j < Math.min(i + 8, lines.length); j++) {
+                        const oddsLine = lines[j];
+                        const oddsMatch = oddsLine.match(/\+(\d{3,5})\b/);
+                        
+                        if (oddsMatch) {
+                            const odds = parseInt(oddsMatch[1]);
+                            if (odds >= 100 && odds <= 100000) {
+                                oddsData[golfer] = odds;
+                                console.log(`  ✅ FOUND: ${golfer} = +${odds} (line ${j}: "${oddsLine}")`);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        console.log('=== MOBILE PARSING COMPLETE ===');
+        console.log('Total found:', Object.keys(oddsData).length);
+        console.log('Results:', oddsData);
+        
+        return oddsData;
+    }
+
+    matchesGolferName(line, golfer) {
+        // Handle various name formats in mobile:
+        // - "R. McIlroy" matches "Rory McIlroy"
+        // - "T. Fleetwood" matches "Tommy Fleetwood" 
+        // - "L. Åberg" matches "Ludvig Åberg"
+        // - "Cam. Young" matches "Cameron Young"
+        
+        const cleanLine = line.toLowerCase().replace(/[^\w\s.-]/g, '').trim();
+        const cleanGolfer = golfer.toLowerCase().replace(/[^\w\s.-]/g, '').trim();
+        
+        // Direct match
+        if (cleanLine === cleanGolfer) return true;
+        
+        // Split names for analysis
+        const lineParts = cleanLine.split(/\s+/);
+        const golferParts = cleanGolfer.split(/\s+/);
+        
+        if (golferParts.length < 2) return false; // Need at least first and last name
+        
+        const [golferFirst, ...golferRest] = golferParts;
+        const golferLast = golferRest.join(' ');
+        
+        // Check abbreviated first name patterns
+        for (const part of lineParts) {
+            // Pattern: "R. McIlroy" or "Cam. Young"
+            if (part.includes('.')) {
+                const abbrev = part.replace('.', '').toLowerCase();
+                const restOfLine = lineParts.filter(p => p !== part).join(' ');
+                
+                // Check if abbreviation matches first name and rest matches last name
+                if (golferFirst.startsWith(abbrev) && restOfLine === golferLast) {
+                    return true;
+                }
+            }
+        }
+        
+        // Check last name only match (for cases where first name is very abbreviated)
+        if (lineParts.some(part => part === golferLast || part.replace('.', '') === golferLast)) {
+            return true;
+        }
+        
+        // Special handling for common abbreviations
+        const abbreviationMap = {
+            'cam': 'cameron',
+            'j': 'justin',
+            'r': 'rory',
+            't': 'tommy',
+            'l': 'ludvig',
+            'v': 'viktor',
+            'p': 'patrick',
+            'c': 'collin',
+            's': 'scottie',
+            'h': 'hideki',
+            'k': 'keegan',
+            'm': 'maverick',
+            'b': 'ben',
+            'a': 'akshay'
+        };
+        
+        // Try abbreviation matching
+        for (const [abbrev, fullName] of Object.entries(abbreviationMap)) {
+            if (cleanLine.includes(abbrev + '.') || cleanLine.includes(abbrev + ' ')) {
+                if (golferFirst.startsWith(fullName) && cleanLine.includes(golferLast)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    parseDesktopFormat(pastedContent, golfers) {
+        console.log('=== PARSING DESKTOP FORMAT ===');
+        const oddsData = {};
+        
         // Clean up the content - remove extra whitespace and normalize
         const cleanContent = pastedContent
             .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
             .replace(/\n+/g, ' ')  // Replace newlines with spaces
             .trim();
-        
-        console.log('Searching for golfers:', golfers);
-        console.log('Content preview:', cleanContent.substring(0, 500) + '...');
         
         // Multiple parsing strategies
         golfers.forEach(golfer => {
@@ -779,7 +929,7 @@ class TourChampionshipApp {
             }
         });
         
-        console.log('=== PARSING COMPLETE ===');
+        console.log('=== DESKTOP PARSING COMPLETE ===');
         console.log('Total found:', Object.keys(oddsData).length);
         console.log('Results:', oddsData);
         
@@ -844,6 +994,9 @@ class TourChampionshipApp {
                     <li><strong>Paste it in the text area below</strong></li>
                     <li>Click "Parse & Update Odds"</li>
                 </ol>
+                <p style="color: #94a3b8; margin: 0; font-size: 13px; font-style: italic;">
+                    📱 Works with both desktop and mobile formats! Mobile names like "R. McIlroy" will automatically match "Rory McIlroy".
+                </p>
             </div>
             
             <div style="margin-bottom: 25px;">
